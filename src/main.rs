@@ -1,42 +1,85 @@
-use dialoguer::{theme::ColorfulTheme, Select};
+use console::Term;
+use dialoguer::{theme::ColorfulTheme, Confirm, Input};
 
-fn main() {
-    let selections = &[
-        "Ice Cream",
-        "Vanilla Cupcake",
-        "Chocolate Muffin",
-        "A Pile of sweet, sweet mustard",
-    ];
+#[derive(Debug)]
+pub struct ConfiguresSelected {
+    pub eslint_config: bool,
+    pub prettier_config: bool,
+    pub vitest_config: bool,
+    pub common_toolbox: bool,
+}
 
-    let selection = Select::with_theme(&ColorfulTheme::default())
-        .with_prompt("Pick your flavor")
-        .default(0)
-        .items(&selections[..])
-        .interact()
-        .unwrap();
-
-    println!("Enjoy your {}!", selections[selection]);
-
-    let selection = Select::with_theme(&ColorfulTheme::default())
-        .with_prompt("Optionally pick your flavor")
-        .default(0)
-        .items(&selections[..])
-        .interact_opt()
-        .unwrap();
-
-    if let Some(selection) = selection {
-        println!("Enjoy your {}!", selections[selection]);
-    } else {
-        println!("You didn't select anything!");
+impl ConfiguresSelected {
+    pub fn new() -> Self {
+        Self {
+            eslint_config: false,
+            prettier_config: false,
+            vitest_config: false,
+            common_toolbox: false,
+        }
     }
 
-    let selection = Select::with_theme(&ColorfulTheme::default())
-        .with_prompt("Optionally pick your flavor, hint it might be on the second page")
-        .default(0)
-        .max_length(2)
-        .items(&selections[..])
-        .interact()
+    pub fn set_eslint_config(&mut self, value: bool) {
+        self.eslint_config = value
+    }
+
+    pub fn set_prettier_config(&mut self, value: bool) {
+        self.prettier_config = value
+    }
+
+    pub fn set_vitest_config(&mut self, value: bool) {
+        self.vitest_config = value
+    }
+
+    pub fn set_common_toolbox(&mut self, value: bool) {
+        self.common_toolbox = value
+    }
+}
+
+impl Default for ConfiguresSelected {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+fn main() {
+    let mut configures_selected = ConfiguresSelected::default();
+
+    let term = Term::buffered_stderr();
+    let theme = ColorfulTheme::default();
+
+    let project_name: String = Input::with_theme(&theme)
+        .with_prompt("projectName")
+        .default("vue-monorepo-project".to_string())
+        .interact_on(&term)
         .unwrap();
 
-    println!("Enjoy your {}!", selections[selection]);
+    let config_value: bool = Confirm::with_theme(&theme)
+        .with_prompt("Add ESLint for code quality?")
+        .interact_on(&term)
+        .unwrap();
+    configures_selected.set_eslint_config(config_value);
+
+    let config_value: bool = Confirm::with_theme(&theme)
+        .with_prompt("Add Prettier for code formatting?")
+        .interact_on(&term)
+        .unwrap();
+    configures_selected.set_prettier_config(config_value);
+
+    let config_value: bool = Confirm::with_theme(&theme)
+        .with_prompt("Add Vitest for Unit Testing?")
+        .interact_on(&term)
+        .unwrap();
+    configures_selected.set_vitest_config(config_value);
+
+    let config_value: bool = Confirm::with_theme(&theme)
+        .with_prompt("Add Common toolbox lib for project?")
+        .interact_on(&term)
+        .unwrap();
+    configures_selected.set_common_toolbox(config_value);
+
+    if project_name.len() != 0 {
+        println!("project name: {}", project_name);
+    }
+    println!("The selected configures: {:?}", configures_selected);
 }

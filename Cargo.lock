@@ -37,6 +37,7 @@ dependencies = [
 name = "create-vue-monorepo-rs"
 version = "0.1.0"
 dependencies = [
+ "console",
  "dialoguer",
  "tempfile",
  "thiserror",
