@@ -1,5 +1,8 @@
 use console::Term;
 use dialoguer::{theme::ColorfulTheme, Confirm, Input};
+use std::env;
+
+use create_vue_monorepo_rs::handle_target_dir;
 
 #[derive(Debug)]
 pub struct ConfiguresSelected {
@@ -46,7 +49,6 @@ fn main() {
     let mut configures_selected = ConfiguresSelected::default();
 
     let (project_name, configures_selected) = dialoguer_work(&mut configures_selected);
-    
 
     if project_name.len() != 0 {
         println!("project name: {}", project_name);
@@ -55,15 +57,18 @@ fn main() {
 }
 
 pub fn dialoguer_work(configures: &mut ConfiguresSelected) -> (String, &ConfiguresSelected) {
-    
     let term = Term::buffered_stderr();
     let theme = ColorfulTheme::default();
-    
+
     let project_name: String = Input::with_theme(&theme)
         .with_prompt("projectName")
         .default("vue-monorepo-project".to_string())
         .interact_on(&term)
         .unwrap();
+
+    let root = env::current_dir().unwrap().join(project_name.clone());
+    println!("root: {:?}", root.display());
+    handle_target_dir(&root);
 
     let config_value: bool = Confirm::with_theme(&theme)
         .with_prompt("Add ESLint for code quality?")
