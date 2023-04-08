@@ -49,6 +49,7 @@ pub fn empty_dir(dir: &str) {
     if !fs::metadata(dir).is_ok() {
         return;
     }
+    println!("Target directory already exists or is not empty, will be reset.");
     fs::remove_dir_all(dir).unwrap();
     fs::create_dir(dir).unwrap();
     // post_order_directory_traverse(dir, |dir| fs::remove_dir(dir), |file| fs::remove_file(file))?;

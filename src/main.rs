@@ -2,6 +2,7 @@ use console::Term;
 use dialoguer::{theme::ColorfulTheme, Confirm, Input};
 use std::env;
 use std::fs;
+use std::path::PathBuf;
 
 use create_vue_monorepo_rs::{empty_dir, is_valid_package_name, to_valid_package_name};
 
@@ -49,8 +50,9 @@ impl Default for ConfiguresSelected {
 fn main() {
     let mut configures_selected = ConfiguresSelected::default();
 
-    let (project_name, configures_selected) = dialoguer_work(&mut configures_selected);
+    let (root, project_name, configures_selected) = dialoguer_work(&mut configures_selected);
 
+    println!("target dir: {:?}", root.display());
     if project_name.len() != 0 {
         println!("project name: {}", project_name);
     }
@@ -59,7 +61,7 @@ fn main() {
     // let pkg = { }
 }
 
-pub fn dialoguer_work(configures: &mut ConfiguresSelected) -> (String, &ConfiguresSelected) {
+pub fn dialoguer_work(configures: &mut ConfiguresSelected) -> (PathBuf,String, &ConfiguresSelected) {
     let term = Term::buffered_stderr();
     let theme = ColorfulTheme::default();
 
@@ -79,7 +81,6 @@ pub fn dialoguer_work(configures: &mut ConfiguresSelected) -> (String, &Configur
     println!("Current project name: {}", project_name);
 
     let root = env::current_dir().unwrap().join(project_name.clone());
-    println!("root: {:?}", root.display());
     if fs::metadata(root.clone()).is_ok() {
         empty_dir(root.as_path().to_str().unwrap());
     } else if fs::metadata(root.clone()).is_err() {
@@ -110,5 +111,5 @@ pub fn dialoguer_work(configures: &mut ConfiguresSelected) -> (String, &Configur
         .unwrap();
     configures.set_common_toolbox(config_value);
 
-    (project_name, configures)
+    (root, project_name, configures)
 }
