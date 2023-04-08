@@ -1,12 +1,14 @@
+mod utils;
+
 use console::Term;
 use dialoguer::{theme::ColorfulTheme, Confirm, Input};
 use serde_json::json;
 use std::env;
 use std::fs;
 use std::io::Write;
+use std::path::PathBuf;
 
 use create_vue_monorepo_rs::{empty_dir, is_valid_package_name, to_valid_package_name};
-
 #[derive(Debug)]
 pub struct ConfiguresSelected {
     pub eslint_config: bool,
@@ -75,6 +77,16 @@ fn main() {
         .expect("Unable to create file");
     file.write_all(pkg.to_string().as_bytes())
         .expect("Unable to write data to file");
+
+    let template_root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("template");
+    
+    render("base", &template_root, &root);
+}
+
+pub fn render(template_name: &str, template_root: &PathBuf, root: &PathBuf) {
+    let template_dir = template_root.join(template_name);
+    // TODO
+    // render_template(template_dir, root);
 }
 
 pub fn dialoguer_work(configures: &mut ConfiguresSelected) -> (String, &ConfiguresSelected) {
