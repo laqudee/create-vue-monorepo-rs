@@ -3,9 +3,7 @@ use dialoguer::{theme::ColorfulTheme, Confirm, Input};
 use std::env;
 use std::fs;
 
-use create_vue_monorepo_rs::{
-    can_skip_emptying, empty_dir, is_valid_package_name, to_valid_package_name,
-};
+use create_vue_monorepo_rs::{empty_dir, is_valid_package_name, to_valid_package_name};
 
 #[derive(Debug)]
 pub struct ConfiguresSelected {
@@ -57,17 +55,28 @@ fn main() {
         println!("project name: {}", project_name);
     }
     println!("The selected configures: {:?}", configures_selected);
+
+    // let pkg = { }
 }
 
 pub fn dialoguer_work(configures: &mut ConfiguresSelected) -> (String, &ConfiguresSelected) {
     let term = Term::buffered_stderr();
     let theme = ColorfulTheme::default();
 
-    let project_name: String = Input::with_theme(&theme)
+    let mut project_name: String = Input::with_theme(&theme)
         .with_prompt("projectName")
         .default("vue-monorepo-project".to_string())
         .interact_on(&term)
         .unwrap();
+
+    if !is_valid_package_name(&project_name) {
+        println!(
+            "Invalid package.json name `{}`, Automatically converted to a valid name.",
+            project_name
+        );
+        project_name = to_valid_package_name(&project_name)
+    }
+    println!("Current project name: {}", project_name);
 
     let root = env::current_dir().unwrap().join(project_name.clone());
     println!("root: {:?}", root.display());

@@ -2,8 +2,9 @@ use regex::Regex;
 use std::fs;
 
 pub fn is_valid_package_name(project_name: &str) -> bool {
-    let re = Regex::new(r"/^(?:@[a-z0-9-*~][a-z0-9-*._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/").unwrap();
-    re.is_match(project_name)
+    Regex::new(r"^(?:@[a-z0-9-*~][a-z0-9-*._~]*/)?[a-z0-9-~][a-z0-9-._~]*$")
+        .unwrap()
+        .is_match(project_name)
 }
 
 pub fn to_valid_package_name(project_name: &str) -> String {
