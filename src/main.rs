@@ -1,7 +1,9 @@
 use console::Term;
 use dialoguer::{theme::ColorfulTheme, Confirm, Input};
+use serde_json::json;
 use std::env;
 use std::fs;
+use std::io::Write;
 use std::path::PathBuf;
 
 use create_vue_monorepo_rs::{empty_dir, is_valid_package_name, to_valid_package_name};
@@ -58,10 +60,18 @@ fn main() {
     }
     println!("The selected configures: {:?}", configures_selected);
 
-    // let pkg = { }
+    let pkg = json!({
+        "name": project_name,
+        "version": "0.0.1"
+    });
+    
+    let mut file = fs::File::create(format!("{}/package.json", root.as_path().to_str().unwrap())).expect("Unable to create file");
+    file.write_all(pkg.to_string().as_bytes()).expect("Unable to write data to file");
 }
 
-pub fn dialoguer_work(configures: &mut ConfiguresSelected) -> (PathBuf,String, &ConfiguresSelected) {
+pub fn dialoguer_work(
+    configures: &mut ConfiguresSelected,
+) -> (PathBuf, String, &ConfiguresSelected) {
     let term = Term::buffered_stderr();
     let theme = ColorfulTheme::default();
 
