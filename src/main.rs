@@ -2,7 +2,12 @@ use console::Term;
 use dialoguer::{theme::ColorfulTheme, Confirm, Input};
 use std::env;
 
-use create_vue_monorepo_rs::handle_target_dir;
+use create_vue_monorepo_rs::{
+    can_skip_emptying, 
+    empty_dir, 
+    is_valid_package_name, 
+    to_valid_package_name,
+};
 
 #[derive(Debug)]
 pub struct ConfiguresSelected {
@@ -68,7 +73,6 @@ pub fn dialoguer_work(configures: &mut ConfiguresSelected) -> (String, &Configur
 
     let root = env::current_dir().unwrap().join(project_name.clone());
     println!("root: {:?}", root.display());
-    handle_target_dir(&root);
 
     let config_value: bool = Confirm::with_theme(&theme)
         .with_prompt("Add ESLint for code quality?")
