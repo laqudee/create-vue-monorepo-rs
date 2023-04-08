@@ -4,7 +4,6 @@ use serde_json::json;
 use std::env;
 use std::fs;
 use std::io::Write;
-use std::path::PathBuf;
 
 use create_vue_monorepo_rs::{empty_dir, is_valid_package_name, to_valid_package_name};
 
@@ -52,7 +51,14 @@ impl Default for ConfiguresSelected {
 fn main() {
     let mut configures_selected = ConfiguresSelected::default();
 
-    let (root, project_name, configures_selected) = dialoguer_work(&mut configures_selected);
+    let (project_name, configures_selected) = dialoguer_work(&mut configures_selected);
+
+    let root = env::current_dir().unwrap().join(project_name.clone());
+    if fs::metadata(root.clone()).is_ok() {
+        empty_dir(root.as_path().to_str().unwrap());
+    } else if fs::metadata(root.clone()).is_err() {
+        fs::create_dir(root.clone()).unwrap();
+    }
 
     println!("target dir: {:?}", root.display());
     if project_name.len() != 0 {
@@ -64,14 +70,14 @@ fn main() {
         "name": project_name,
         "version": "0.0.1"
     });
-    
-    let mut file = fs::File::create(format!("{}/package.json", root.as_path().to_str().unwrap())).expect("Unable to create file");
-    file.write_all(pkg.to_string().as_bytes()).expect("Unable to write data to file");
+
+    let mut file = fs::File::create(format!("{}/package.json", root.as_path().to_str().unwrap()))
+        .expect("Unable to create file");
+    file.write_all(pkg.to_string().as_bytes())
+        .expect("Unable to write data to file");
 }
 
-pub fn dialoguer_work(
-    configures: &mut ConfiguresSelected,
-) -> (PathBuf, String, &ConfiguresSelected) {
+pub fn dialoguer_work(configures: &mut ConfiguresSelected) -> (String, &ConfiguresSelected) {
     let term = Term::buffered_stderr();
     let theme = ColorfulTheme::default();
 
@@ -89,13 +95,6 @@ pub fn dialoguer_work(
         project_name = to_valid_package_name(&project_name)
     }
     println!("Current project name: {}", project_name);
-
-    let root = env::current_dir().unwrap().join(project_name.clone());
-    if fs::metadata(root.clone()).is_ok() {
-        empty_dir(root.as_path().to_str().unwrap());
-    } else if fs::metadata(root.clone()).is_err() {
-        fs::create_dir(root.clone()).unwrap();
-    }
 
     let config_value: bool = Confirm::with_theme(&theme)
         .with_prompt("Add ESLint for code quality?")
@@ -121,5 +120,5 @@ pub fn dialoguer_work(
         .unwrap();
     configures.set_common_toolbox(config_value);
 
-    (root, project_name, configures)
+    (project_name, configures)
 }
