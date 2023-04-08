@@ -45,9 +45,20 @@ impl Default for ConfiguresSelected {
 fn main() {
     let mut configures_selected = ConfiguresSelected::default();
 
+    let (project_name, configures_selected) = dialoguer_work(&mut configures_selected);
+    
+
+    if project_name.len() != 0 {
+        println!("project name: {}", project_name);
+    }
+    println!("The selected configures: {:?}", configures_selected);
+}
+
+pub fn dialoguer_work(configures: &mut ConfiguresSelected) -> (String, &ConfiguresSelected) {
+    
     let term = Term::buffered_stderr();
     let theme = ColorfulTheme::default();
-
+    
     let project_name: String = Input::with_theme(&theme)
         .with_prompt("projectName")
         .default("vue-monorepo-project".to_string())
@@ -58,28 +69,25 @@ fn main() {
         .with_prompt("Add ESLint for code quality?")
         .interact_on(&term)
         .unwrap();
-    configures_selected.set_eslint_config(config_value);
+    configures.set_eslint_config(config_value);
 
     let config_value: bool = Confirm::with_theme(&theme)
         .with_prompt("Add Prettier for code formatting?")
         .interact_on(&term)
         .unwrap();
-    configures_selected.set_prettier_config(config_value);
+    configures.set_prettier_config(config_value);
 
     let config_value: bool = Confirm::with_theme(&theme)
         .with_prompt("Add Vitest for Unit Testing?")
         .interact_on(&term)
         .unwrap();
-    configures_selected.set_vitest_config(config_value);
+    configures.set_vitest_config(config_value);
 
     let config_value: bool = Confirm::with_theme(&theme)
         .with_prompt("Add Common toolbox lib for project?")
         .interact_on(&term)
         .unwrap();
-    configures_selected.set_common_toolbox(config_value);
+    configures.set_common_toolbox(config_value);
 
-    if project_name.len() != 0 {
-        println!("project name: {}", project_name);
-    }
-    println!("The selected configures: {:?}", configures_selected);
+    (project_name, configures)
 }
