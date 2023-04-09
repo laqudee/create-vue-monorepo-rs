@@ -8,6 +8,7 @@ use std::fs;
 use std::io::Write;
 use std::path::PathBuf;
 
+use utils::render::render_template;
 use create_vue_monorepo_rs::{empty_dir, is_valid_package_name, to_valid_package_name};
 #[derive(Debug)]
 pub struct ConfiguresSelected {
@@ -86,7 +87,7 @@ fn main() {
 pub fn render(template_name: &str, template_root: &PathBuf, root: &PathBuf) {
     let template_dir = template_root.join(template_name);
     // TODO
-    // render_template(template_dir, root);
+    render_template(&template_dir, root);
 }
 
 pub fn dialoguer_work(configures: &mut ConfiguresSelected) -> (String, &ConfiguresSelected) {
