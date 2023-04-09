@@ -2,6 +2,9 @@ use std::fs;
 use std::io::Result;
 use std::path::{Path, PathBuf};
 
+use serde::{Deserialize, Serialize};
+use serde_json::{Value,self};
+
 pub fn render_template(src: &PathBuf, dest: &PathBuf) -> Result<()> {
     let stats = fs::metadata(src).unwrap();
     if stats.is_dir() {
@@ -24,9 +27,15 @@ pub fn render_template(src: &PathBuf, dest: &PathBuf) -> Result<()> {
 
     let file_name = Path::new(src).file_name().unwrap().to_str().unwrap();
 
-    // package.json 文件尚未处理
     // TODO: 处理 package.json 文件
-    
+    if file_name == "package.json" && fs::metadata(&dest).is_ok() {
+      let existing_contents = fs::read_to_string(&dest).unwrap_or_default();
+      let existing: Value = serde_json::from_str(&existing_contents).unwrap();
+
+      let new_contents = fs::read_to_string(&src).unwrap_or_default();
+      let new_package: Value = serde_json::from_str(&new_contents).unwrap();
+    }
+
     if file_name.starts_with('_') {
         let parent_dir = dest.parent().unwrap();
         let new_filename = file_name.replacen('_', ".", 1);
