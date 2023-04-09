@@ -1,9 +1,11 @@
 use std::fs;
 use std::io::Result;
+use std::io::Write;
 use std::path::{Path, PathBuf};
 
-use serde::{Deserialize, Serialize};
 use serde_json::{Value,self};
+
+use super::{sort_dependencied::sort, deep_merge::merge};
 
 pub fn render_template(src: &PathBuf, dest: &PathBuf) -> Result<()> {
     let stats = fs::metadata(src).unwrap();
@@ -34,6 +36,13 @@ pub fn render_template(src: &PathBuf, dest: &PathBuf) -> Result<()> {
 
       let new_contents = fs::read_to_string(&src).unwrap_or_default();
       let new_package: Value = serde_json::from_str(&new_contents).unwrap();
+
+      let mut package_json = merge(&existing, &new_package);
+      let pkg= sort(&mut package_json);
+      let pkg = serde_json::to_string_pretty(&pkg)?;
+      let mut file = fs::File::create(&dest)?;
+      file.write_all(pkg.as_bytes())?;
+      return Ok(());
     }
 
     if file_name.starts_with('_') {

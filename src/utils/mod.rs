@@ -1,3 +1,3 @@
-pub mod deep_merger;
+pub mod deep_merge;
 pub mod sort_dependencied;
 pub mod render;
