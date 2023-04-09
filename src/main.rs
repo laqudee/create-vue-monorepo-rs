@@ -8,8 +8,8 @@ use std::fs;
 use std::io::Write;
 use std::path::PathBuf;
 
-use utils::render::render_template;
 use create_vue_monorepo_rs::{empty_dir, is_valid_package_name, to_valid_package_name};
+use utils::render::render_template;
 #[derive(Debug)]
 pub struct ConfiguresSelected {
     pub eslint_config: bool,
@@ -51,7 +51,7 @@ impl Default for ConfiguresSelected {
     }
 }
 
-fn main() {
+fn main() -> std::io::Result<()> {
     let mut configures_selected = ConfiguresSelected::default();
 
     let (project_name, configures_selected) = dialoguer_work(&mut configures_selected);
@@ -80,14 +80,18 @@ fn main() {
         .expect("Unable to write data to file");
 
     let template_root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("template");
-    
-    render("base", &template_root, &root);
+
+    render("base", &template_root, &root)?;
+
+    Ok(())
 }
 
-pub fn render(template_name: &str, template_root: &PathBuf, root: &PathBuf) {
+pub fn render(template_name: &str, template_root: &PathBuf, root: &PathBuf) -> std::io::Result<()> {
     let template_dir = template_root.join(template_name);
-    // TODO
-    render_template(&template_dir, root);
+    // TODO package.json 文件尚未处理
+    render_template(&template_dir, root)?;
+
+    Ok(())
 }
 
 pub fn dialoguer_work(configures: &mut ConfiguresSelected) -> (String, &ConfiguresSelected) {
