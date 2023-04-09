@@ -1,5 +1,6 @@
 use serde_json::{Map, Value};
 
+// TODO 排序也有问题
 pub fn sort(package_json: &mut Value) -> Value {
     let mut sorted = Map::new();
 

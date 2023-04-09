@@ -25,6 +25,8 @@ pub fn render_template(src: &PathBuf, dest: &PathBuf) -> Result<()> {
         return Ok(());
     }
 
+    // TODO 拷贝文件的时机：如果不在上面拷贝，修改名称的时候报找不到文件；
+    // 放在这里，后面的render_template()调用会覆盖前面的
     fs::copy(src, dest)?;
 
     let file_name = Path::new(src).file_name().unwrap().to_str().unwrap();
