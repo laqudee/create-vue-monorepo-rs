@@ -29,7 +29,7 @@ pub fn render_template(src: &PathBuf, dest: &PathBuf) -> Result<()> {
 
     let file_name = Path::new(src).file_name().unwrap().to_str().unwrap();
 
-    // TODO: 处理 package.json 文件
+    // TODO: 处理 package.json 文件 合并时后来的苏醒覆盖了前面的属性
     if file_name == "package.json" && fs::metadata(&dest).is_ok() {
       let existing_contents = fs::read_to_string(&dest).unwrap_or_default();
       let existing: Value = serde_json::from_str(&existing_contents).unwrap();

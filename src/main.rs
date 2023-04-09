@@ -10,6 +10,8 @@ use std::path::PathBuf;
 
 use create_vue_monorepo_rs::{empty_dir, is_valid_package_name, to_valid_package_name};
 use utils::render::render_template;
+
+// use crate::utils::render_eslint::render_eslint_template;
 #[derive(Debug)]
 pub struct ConfiguresSelected {
     pub eslint_config: bool,
@@ -67,7 +69,7 @@ fn main() -> std::io::Result<()> {
     if project_name.len() != 0 {
         println!("project name: {}", project_name);
     }
-    println!("The selected configures: {:?}", configures_selected);
+    // println!("The selected configures: {:?}", configures_selected);
 
     let pkg = json!({
         "name": project_name,
@@ -83,12 +85,23 @@ fn main() -> std::io::Result<()> {
 
     render("base", &template_root, &root)?;
 
+    if configures_selected.vitest_config {
+        render("config/vitest", &template_root, &root)?;
+    }
+
+    if configures_selected.common_toolbox {
+        render("code", &template_root, &root)?;
+    }
+
+    // if configures_selected.eslint_config {
+    //     render_eslint_template(&template_root, &root)?;
+    // }
+
     Ok(())
 }
 
 pub fn render(template_name: &str, template_root: &PathBuf, root: &PathBuf) -> std::io::Result<()> {
     let template_dir = template_root.join(template_name);
-    // TODO package.json 文件尚未处理
     render_template(&template_dir, root)?;
 
     Ok(())
