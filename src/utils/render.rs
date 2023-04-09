@@ -3,9 +3,9 @@ use std::io::Result;
 use std::io::Write;
 use std::path::{Path, PathBuf};
 
-use serde_json::{Value,self};
+use serde_json::{self, Value};
 
-use super::{sort_dependencied::sort, deep_merge::merge};
+use super::{deep_merge::merge, sort_dependencied::sort};
 
 pub fn render_template(src: &PathBuf, dest: &PathBuf) -> Result<()> {
     let stats = fs::metadata(src).unwrap();
@@ -31,18 +31,18 @@ pub fn render_template(src: &PathBuf, dest: &PathBuf) -> Result<()> {
 
     // TODO: 处理 package.json 文件 合并时后来的苏醒覆盖了前面的属性
     if file_name == "package.json" && fs::metadata(&dest).is_ok() {
-      let existing_contents = fs::read_to_string(&dest).unwrap_or_default();
-      let existing: Value = serde_json::from_str(&existing_contents).unwrap();
+        let existing_contents = fs::read_to_string(&dest).unwrap_or_default();
+        let existing: Value = serde_json::from_str(&existing_contents).unwrap();
 
-      let new_contents = fs::read_to_string(&src).unwrap_or_default();
-      let new_package: Value = serde_json::from_str(&new_contents).unwrap();
+        let new_contents = fs::read_to_string(&src).unwrap_or_default();
+        let new_package: Value = serde_json::from_str(&new_contents).unwrap();
 
-      let mut package_json = merge(&existing, &new_package);
-      let pkg= sort(&mut package_json);
-      let pkg = serde_json::to_string_pretty(&pkg)?;
-      let mut file = fs::File::create(&dest)?;
-      file.write_all(pkg.as_bytes())?;
-      return Ok(());
+        let mut package_json = merge(&existing, &new_package);
+        let pkg = sort(&mut package_json);
+        let pkg = serde_json::to_string_pretty(&pkg)?;
+        let mut file = fs::File::create(&dest)?;
+        file.write_all(pkg.as_bytes())?;
+        return Ok(());
     }
 
     if file_name.starts_with('_') {
