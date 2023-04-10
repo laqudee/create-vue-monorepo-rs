@@ -25,9 +25,6 @@ pub fn render_template(src: &PathBuf, dest: &PathBuf) -> Result<()> {
             Ok(())
         }
         Ok(_) => {
-            // fs::copy()的调用时机，怎么放置，才不会影响package.json的合成
-            fs::copy(src, dest)?;
-
             let file_name = Path::new(src).file_name().unwrap().to_str().unwrap();
 
             // package.json的排序与合成都有问题
@@ -38,7 +35,7 @@ pub fn render_template(src: &PathBuf, dest: &PathBuf) -> Result<()> {
                 let new_contents = fs::read_to_string(&src).unwrap_or_default();
                 let new_package: Value = serde_json::from_str(&new_contents).unwrap();
 
-                let mut package_json = merge(&existing, &new_package);
+                let mut package_json = merge(&new_package, &existing);
                 let pkg = sort(&mut package_json);
                 let pkg = serde_json::to_string_pretty(&pkg)?;
                 let mut file = fs::File::create(&dest)?;
@@ -50,6 +47,9 @@ pub fn render_template(src: &PathBuf, dest: &PathBuf) -> Result<()> {
                 let new_filename = file_name.replacen('_', ".", 1);
                 let dest_path = parent_dir.join(new_filename);
 
+                if !fs::metadata(&dest).is_ok() {
+                    fs::write(&dest, "\n")?;
+                }
                 fs::rename(&dest, &dest_path)?;
             }
 
@@ -57,6 +57,17 @@ pub fn render_template(src: &PathBuf, dest: &PathBuf) -> Result<()> {
                 let existing = fs::read_to_string(dest).unwrap_or_default();
                 let new_gitignore = fs::read_to_string(src).unwrap_or_default();
                 fs::write(dest, existing + "\n" + &new_gitignore)?;
+            }
+
+            // println!("dest is exist: {}", fs::metadata(&dest).is_ok());
+            // println!("dest: {:?}", dest);
+            let dest_filename = Path::new(dest).file_name().unwrap().to_str().unwrap();
+            if !fs::metadata(&dest).is_ok() && !dest_filename.starts_with('_') {
+                fs::write(&dest, "\n")?;
+            }
+            // fs::copy(src, dest)?;
+            if !file_name.starts_with('_') {
+                fs::copy(src, dest)?;
             }
 
             Ok(())
