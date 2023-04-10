@@ -65,11 +65,10 @@ fn main() -> std::io::Result<()> {
         fs::create_dir(root.clone()).unwrap();
     }
 
-    println!("target dir: {:?}", root.display());
+    println!("! target dir: {:?}", root.display());
     if project_name.len() != 0 {
-        println!("project name: {}", project_name);
+        println!("! project name: {}", project_name);
     }
-    // println!("The selected configures: {:?}", configures_selected);
 
     let pkg = json!({
         "name": project_name,
@@ -119,12 +118,12 @@ pub fn dialoguer_work(configures: &mut ConfiguresSelected) -> (String, &Configur
 
     if !is_valid_package_name(&project_name) {
         println!(
-            "Invalid package.json name `{}`, Automatically converted to a valid name.",
+            "! Invalid package.json name `{}`, Automatically converted to a valid name.",
             project_name
         );
         project_name = to_valid_package_name(&project_name)
     }
-    println!("Current project name: {}", project_name);
+    println!("! Current project name: {}", project_name);
 
     let config_value: bool = Confirm::with_theme(&theme)
         .with_prompt("Add ESLint for code quality?")

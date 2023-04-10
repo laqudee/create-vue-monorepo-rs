@@ -28,21 +28,18 @@ pub fn merge(target: &Value, obj: &Value) -> Value {
             }
         };
         let new_val = obj.get(key).unwrap();
-        // *old_val = new_val.clone();
 
         if old_val.is_array() && new_val.is_array() {
             *target.get_mut(key).unwrap() = merge_array_with_dedupe(old_val, new_val);
         } else if old_val.is_object() && new_val.is_object() {
             *target.get_mut(key).unwrap() = merge(&old_val, &new_val);
         } else {
-            // println!("target key: {:?} - {:?}", key, target.get(key));
-            // println!("new_val key: {:?} - {:?}", key, obj.get(key));
-
             if let Some(val) = target.get_mut(key) {
-                *val = new_val.clone()
+                *val = new_val.clone();
+            } else {
+                target[key] = new_val.clone();
             }
         }
     }
-    // println!("finally: target: {:?}", target);
     target.into()
 }

@@ -27,24 +27,23 @@ pub fn render_template(src: &PathBuf, dest: &PathBuf) -> Result<()> {
         Ok(_) => {
             let file_name = Path::new(src).file_name().unwrap().to_str().unwrap();
 
-            // package.json的排序与合成都有问题
-            if let ("package.json", Ok(_)) = (file_name, fs::metadata(&dest)) {
-                let existing_contents = fs::read_to_string(&dest).unwrap_or_default();
-                let existing: Value = serde_json::from_str(&existing_contents).unwrap();
+            if file_name == "package.json" {
+                if fs::metadata(&dest).is_ok() {
+                    let existing_contents = fs::read_to_string(&dest).unwrap_or_default();
+                    let existing: Value = serde_json::from_str(&existing_contents).unwrap();
 
-                let new_contents = fs::read_to_string(&src).unwrap_or_default();
-                let new_package: Value = serde_json::from_str(&new_contents).unwrap();
+                    let new_contents = fs::read_to_string(&src).unwrap_or_default();
+                    let new_package: Value = serde_json::from_str(&new_contents).unwrap();
 
-                // println!("existing: {:?}", existing);
-                // println!("new_package: {:?}", new_package);
-
-                let mut package_json = merge(&existing, &new_package);
-                let pkg = sort(&mut package_json);
-                let pkg = serde_json::to_string_pretty(&pkg)?;
-                let mut file = fs::File::create(&dest)?;
-                // println!("render-dest: {:?}", dest);
-                // println!("file-pkg: {:?}", pkg);
-                file.write_all(pkg.as_bytes())?;
+                    let mut package_json = merge(&existing, &new_package);
+                    let pkg = sort(&mut package_json);
+                    let pkg = serde_json::to_string_pretty(&pkg)?;
+                    let mut file = fs::File::create(&dest)?;
+                    file.write_all(pkg.as_bytes())?;
+                    return Ok(());
+                } else {
+                    fs::copy(src, dest)?;
+                }
             }
 
             if file_name.starts_with('_') {
@@ -68,14 +67,14 @@ pub fn render_template(src: &PathBuf, dest: &PathBuf) -> Result<()> {
                 return Ok(());
             }
 
-            // println!("dest is exist: {}", fs::metadata(&dest).is_ok());
-            // println!("dest: {:?}", dest);
             let dest_filename = Path::new(dest).file_name().unwrap().to_str().unwrap();
-            if !fs::metadata(&dest).is_ok() && !dest_filename.starts_with('_') {
+            if !fs::metadata(&dest).is_ok() && dest_filename != "package.json" {
                 fs::write(&dest, "\n")?;
             }
 
-            fs::copy(src, dest)?;
+            if dest_filename != "package.json" {
+                fs::copy(src, dest)?;
+            }
 
             Ok(())
         }
