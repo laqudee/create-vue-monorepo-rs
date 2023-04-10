@@ -11,7 +11,6 @@ use std::path::PathBuf;
 use create_vue_monorepo_rs::{empty_dir, is_valid_package_name, to_valid_package_name};
 use utils::render::render_template;
 
-// use crate::utils::render_eslint::render_eslint_template;
 #[derive(Debug)]
 pub struct ConfiguresSelected {
     pub eslint_config: bool,
@@ -92,9 +91,9 @@ fn main() -> std::io::Result<()> {
         render("code", &template_root, &root)?;
     }
 
-    // if configures_selected.eslint_config {
-    //     render_eslint_template(&template_root, &root)?;
-    // }
+    if configures_selected.eslint_config {
+        render("config/eslint", &template_root, &root)?;
+    }
 
     Ok(())
 }
