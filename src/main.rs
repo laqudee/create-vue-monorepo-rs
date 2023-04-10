@@ -10,12 +10,12 @@ use std::io::Write;
 use std::path::PathBuf;
 
 use create_vue_monorepo_rs::{empty_dir, is_valid_package_name, to_valid_package_name};
+// use utils::get_command;
 use utils::render::render_template;
 
 #[derive(Debug)]
 pub struct ConfiguresSelected {
     pub eslint_config: bool,
-    pub prettier_config: bool,
     pub vitest_config: bool,
     pub common_toolbox: bool,
 }
@@ -24,7 +24,6 @@ impl ConfiguresSelected {
     pub fn new() -> Self {
         Self {
             eslint_config: false,
-            prettier_config: false,
             vitest_config: false,
             common_toolbox: false,
         }
@@ -32,10 +31,6 @@ impl ConfiguresSelected {
 
     pub fn set_eslint_config(&mut self, value: bool) {
         self.eslint_config = value
-    }
-
-    pub fn set_prettier_config(&mut self, value: bool) {
-        self.prettier_config = value
     }
 
     pub fn set_vitest_config(&mut self, value: bool) {
@@ -133,16 +128,10 @@ pub fn dialoguer_work(configures: &mut ConfiguresSelected) -> (String, &Configur
     println!("! Current project name: {}", project_name);
 
     let config_value: bool = Confirm::with_theme(&theme)
-        .with_prompt("Add ESLint for code quality?")
+        .with_prompt("Add ESLint for code quality & Add Prettier for code formatting?")
         .interact_on(&term)
         .unwrap();
     configures.set_eslint_config(config_value);
-
-    let config_value: bool = Confirm::with_theme(&theme)
-        .with_prompt("Add Prettier for code formatting?")
-        .interact_on(&term)
-        .unwrap();
-    configures.set_prettier_config(config_value);
 
     let config_value: bool = Confirm::with_theme(&theme)
         .with_prompt("Add Vitest for Unit Testing?")
