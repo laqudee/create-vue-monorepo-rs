@@ -64,6 +64,8 @@ pub fn render_template(src: &PathBuf, dest: &PathBuf) -> Result<()> {
                 }
                 fs::rename(&dest, &dest_path)?;
                 fs::copy(src, &dest_path)?;
+
+                return Ok(());
             }
 
             // println!("dest is exist: {}", fs::metadata(&dest).is_ok());
@@ -73,9 +75,7 @@ pub fn render_template(src: &PathBuf, dest: &PathBuf) -> Result<()> {
                 fs::write(&dest, "\n")?;
             }
 
-            if !file_name.starts_with('_') {
-                fs::copy(src, dest)?;
-            }
+            fs::copy(src, dest)?;
 
             Ok(())
         }
