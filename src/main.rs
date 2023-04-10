@@ -10,7 +10,7 @@ use std::io::Write;
 use std::path::PathBuf;
 
 use create_vue_monorepo_rs::{empty_dir, is_valid_package_name, to_valid_package_name};
-// use utils::get_command;
+use utils::get_command::get;
 use utils::render::render_template;
 
 #[derive(Debug)]
@@ -97,6 +97,20 @@ fn main() -> std::io::Result<()> {
     if configures_selected.eslint_config {
         render("config/eslint", &template_root, &root)?;
     }
+
+    let package_manager = "pnpm";
+    println!("! Done. Now run:");
+    println!("! Please use pnpm as the package management tool for the workspace project");
+    println!("! cd {}", project_name);
+    println!("! {}", get(package_manager, "install", None));
+    if configures_selected.eslint_config {
+        println!("! {}", get(package_manager, "lint", None));
+        println!("! {}", get(package_manager, "format", None));
+    }
+    if configures_selected.vitest_config {
+        println!("! {}", get(package_manager, "test", None));
+    }
+    println!("! {}", get(package_manager, "dev", None));
 
     Ok(())
 }

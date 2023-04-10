@@ -1,4 +1,4 @@
-pub fn get_command(package_manager: &str, script_name: &str, args: Option<&str>) -> String {
+pub fn get(package_manager: &str, script_name: &str, args: Option<&str>) -> String {
     if script_name == "install" {
         return if package_manager == "yarn" {
             "yarn".to_string()
