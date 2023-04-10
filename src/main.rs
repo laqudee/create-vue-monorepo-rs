@@ -2,6 +2,7 @@ mod utils;
 
 use console::Term;
 use dialoguer::{theme::ColorfulTheme, Confirm, Input};
+use git2::Repository;
 use serde_json::json;
 use std::env;
 use std::fs;
@@ -58,6 +59,13 @@ fn main() -> std::io::Result<()> {
     let (project_name, configures_selected) = dialoguer_work(&mut configures_selected);
 
     let root = env::current_dir().unwrap().join(project_name.clone());
+
+    // 初始化git
+    let _repo = match Repository::init(&root) {
+        Ok(repo) => repo,
+        Err(e) => panic!("failed to init: {}", e),
+    };
+
     if fs::metadata(root.clone()).is_ok() {
         empty_dir(root.as_path().to_str().unwrap());
     } else if fs::metadata(root.clone()).is_err() {
