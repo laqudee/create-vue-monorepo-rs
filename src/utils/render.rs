@@ -53,9 +53,10 @@ pub fn render_template(src: &PathBuf, dest: &PathBuf) -> Result<()> {
                 let dest_path = parent_dir.join(new_filename);
 
                 if !fs::metadata(&dest).is_ok() {
-                    fs::write(&dest, "\n")?;
+                    fs::write(&dest, "hhh")?;
                 }
                 fs::rename(&dest, &dest_path)?;
+                fs::copy(src, &dest_path)?;
             }
 
             if let ("_gitignore", Ok(_)) = (file_name, fs::metadata(&dest)) {
@@ -70,6 +71,7 @@ pub fn render_template(src: &PathBuf, dest: &PathBuf) -> Result<()> {
             if !fs::metadata(&dest).is_ok() && !dest_filename.starts_with('_') {
                 fs::write(&dest, "\n")?;
             }
+
             if !file_name.starts_with('_') {
                 fs::copy(src, dest)?;
             }
