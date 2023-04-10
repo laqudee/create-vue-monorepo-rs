@@ -42,8 +42,8 @@ pub fn render_template(src: &PathBuf, dest: &PathBuf) -> Result<()> {
                 let pkg = sort(&mut package_json);
                 let pkg = serde_json::to_string_pretty(&pkg)?;
                 let mut file = fs::File::create(&dest)?;
-                println!("render-dest: {:?}", dest);
-                println!("file-pkg: {:?}", pkg);
+                // println!("render-dest: {:?}", dest);
+                // println!("file-pkg: {:?}", pkg);
                 file.write_all(pkg.as_bytes())?;
             }
 
@@ -52,17 +52,18 @@ pub fn render_template(src: &PathBuf, dest: &PathBuf) -> Result<()> {
                 let new_filename = file_name.replacen('_', ".", 1);
                 let dest_path = parent_dir.join(new_filename);
 
+                if let ("_gitignore", Ok(_)) = (file_name, fs::metadata(&dest_path)) {
+                    let existing = fs::read_to_string(&dest_path).unwrap_or_default();
+                    let new_gitignore = fs::read_to_string(src).unwrap_or_default();
+                    fs::write(&dest_path, existing + "\n" + &new_gitignore)?;
+                    return Ok(());
+                }
+
                 if !fs::metadata(&dest).is_ok() {
-                    fs::write(&dest, "hhh")?;
+                    fs::write(&dest, "\n")?;
                 }
                 fs::rename(&dest, &dest_path)?;
                 fs::copy(src, &dest_path)?;
-            }
-
-            if let ("_gitignore", Ok(_)) = (file_name, fs::metadata(&dest)) {
-                let existing = fs::read_to_string(dest).unwrap_or_default();
-                let new_gitignore = fs::read_to_string(src).unwrap_or_default();
-                fs::write(dest, existing + "\n" + &new_gitignore)?;
             }
 
             // println!("dest is exist: {}", fs::metadata(&dest).is_ok());

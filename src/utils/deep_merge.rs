@@ -38,16 +38,11 @@ pub fn merge(target: &Value, obj: &Value) -> Value {
             // println!("target key: {:?} - {:?}", key, target.get(key));
             // println!("new_val key: {:?} - {:?}", key, obj.get(key));
 
-            // *target.get_mut(key).unwrap()  = match target.get(key) {
-            //     Some(_) => new_val.clone(),
-            //     None => new_val.clone(),
-            // };
-
             if let Some(val) = target.get_mut(key) {
                 *val = new_val.clone()
             }
         }
     }
-    println!("finally: target: {:?}", target);
+    // println!("finally: target: {:?}", target);
     target.into()
 }
