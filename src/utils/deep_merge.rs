@@ -1,4 +1,4 @@
-use serde_json::Value;
+use serde_json::{json, Value};
 
 fn merge_array_with_dedupe(a: &Value, b: &Value) -> Value {
     let mut result = Vec::new();
@@ -20,7 +20,13 @@ fn merge_array_with_dedupe(a: &Value, b: &Value) -> Value {
 pub fn merge(target: &Value, obj: &Value) -> Value {
     let mut target = target.clone();
     for key in obj.as_object().unwrap().keys() {
-        let old_val = target.get_mut(key).unwrap();
+        let old_val = {
+            if let Some(val) = target.get(key) {
+                val
+            } else {
+                &json!(null)
+            }
+        };
         let new_val = obj.get(key).unwrap();
         // *old_val = new_val.clone();
 
@@ -29,8 +35,19 @@ pub fn merge(target: &Value, obj: &Value) -> Value {
         } else if old_val.is_object() && new_val.is_object() {
             *target.get_mut(key).unwrap() = merge(&old_val, &new_val);
         } else {
-            *target.get_mut(key).unwrap() = new_val.clone();
+            // println!("target key: {:?} - {:?}", key, target.get(key));
+            // println!("new_val key: {:?} - {:?}", key, obj.get(key));
+
+            // *target.get_mut(key).unwrap()  = match target.get(key) {
+            //     Some(_) => new_val.clone(),
+            //     None => new_val.clone(),
+            // };
+
+            if let Some(val) = target.get_mut(key) {
+                *val = new_val.clone()
+            }
         }
     }
+    println!("finally: target: {:?}", target);
     target.into()
 }

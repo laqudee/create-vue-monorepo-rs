@@ -35,10 +35,15 @@ pub fn render_template(src: &PathBuf, dest: &PathBuf) -> Result<()> {
                 let new_contents = fs::read_to_string(&src).unwrap_or_default();
                 let new_package: Value = serde_json::from_str(&new_contents).unwrap();
 
-                let mut package_json = merge(&new_package, &existing);
+                // println!("existing: {:?}", existing);
+                // println!("new_package: {:?}", new_package);
+
+                let mut package_json = merge(&existing, &new_package);
                 let pkg = sort(&mut package_json);
                 let pkg = serde_json::to_string_pretty(&pkg)?;
                 let mut file = fs::File::create(&dest)?;
+                println!("render-dest: {:?}", dest);
+                println!("file-pkg: {:?}", pkg);
                 file.write_all(pkg.as_bytes())?;
             }
 
@@ -65,7 +70,6 @@ pub fn render_template(src: &PathBuf, dest: &PathBuf) -> Result<()> {
             if !fs::metadata(&dest).is_ok() && !dest_filename.starts_with('_') {
                 fs::write(&dest, "\n")?;
             }
-            // fs::copy(src, dest)?;
             if !file_name.starts_with('_') {
                 fs::copy(src, dest)?;
             }
