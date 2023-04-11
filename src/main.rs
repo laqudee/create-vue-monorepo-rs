@@ -5,20 +5,20 @@ use std::fs;
 use std::io::Write;
 use std::path::PathBuf;
 
-use create_vue_monorepo_rs::dialoguers::dialoguer_work::work;
+use create_vue_monorepo_rs::dialoguers::dialoguer_work;
+use create_vue_monorepo_rs::dialoguers::termcolor_work;
 use create_vue_monorepo_rs::render::main_render::render;
-use create_vue_monorepo_rs::utils::get_command::get;
 use create_vue_monorepo_rs::utils::util::empty_dir;
 use create_vue_monorepo_rs::ConfiguresSelected;
 
 fn main() -> std::io::Result<()> {
     let mut configures_selected = ConfiguresSelected::default();
 
-    let (project_name, configures_selected) = work(&mut configures_selected);
+    let (project_name, configures_selected) = dialoguer_work::work(&mut configures_selected);
 
     let root = env::current_dir().unwrap().join(project_name.clone());
 
-    // init git
+    // Init git
     let _repo = match Repository::init(&root) {
         Ok(repo) => repo,
         Err(e) => panic!("failed to init: {}", e),
@@ -61,19 +61,8 @@ fn main() -> std::io::Result<()> {
         render("config/eslint", &template_root, &root)?;
     }
 
-    let package_manager = "pnpm";
-    println!("! Done. Now run:");
-    println!("! Please use pnpm as the package management tool for the workspace project");
-    println!("! cd {}", project_name);
-    println!("! {}", get(package_manager, "install", None));
-    if configures_selected.eslint_config {
-        println!("! {}", get(package_manager, "lint", None));
-        println!("! {}", get(package_manager, "format", None));
-    }
-    if configures_selected.vitest_config {
-        println!("! {}", get(package_manager, "test", None));
-    }
-    println!("! {}", get(package_manager, "dev", None));
+    // Decorating command line output
+    termcolor_work::work(&project_name, &configures_selected)?;
 
     Ok(())
 }

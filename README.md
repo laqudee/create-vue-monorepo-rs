@@ -6,6 +6,8 @@
 | :-- | :-- |
 | rust | 1.67.1 |
 | dialoguer | 0.10.3 |
+| console | 0.15.5 |
+| termcolor | 1.2.0 |
 | regex | 1.7.3 |
 | serde_json | 1.0.159 |
 | git2 | 0.17.0 |
