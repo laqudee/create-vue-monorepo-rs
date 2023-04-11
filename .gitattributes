@@ -1,0 +1,2 @@
+*.js linguist-language=rust
+*.vue linguist-language=rust
