@@ -1,8 +1,8 @@
-# Use Rust built `create-vue-monorepo` cli
+# `create-vue-monorepo-rs`
 
-- A tool to quickly build a Vue workspace project managed by pnpm.
+> A tool to quickly build a Vue workspace project managed by pnpm.
 
-> 使用 Rust 重构`create-vue-monorepo` cli 库，原库是使用 ESM 构建的
+> Refactor the `create-vue-monorepo` CLI library using Rust. The original library was built using ESM.
 
 | 技术栈     | 版本    |
 | :--------- | :------ |
@@ -77,3 +77,18 @@ cargo publish
 4. [ ] `git2`库没有生效
 5. [ ] 生成的`package.json`内容按照字母顺序排序了，不符合正常的`package.json`顺序
 6. [ ] 是否转为 npm 命令
+
+## 参考
+
+### 原版使用JavaScript写的CLI工具库
+
+- [`create-vue-monorepo`](https://github.com/laqudee/create-vue-monorepo)，仿照create-vue写了一个生成一个pnpm monorepo 的工作仓库的简单CLI
+
+- [`create-vue-business`](https://github.com/laqudee/create-vue-business)，仿照create-vue写了一个生成一个 pnpm monorepo 的工作仓内部packages目录下业务项目的 CLI
+
+
+### 已经发布的NPM包
+
+- [`create-vue-monorepo`](https://www.npmjs.com/package/create-vue-monorepo)
+
+- [`create-vue-business`](https://www.npmjs.com/package/create-vue-business)
