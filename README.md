@@ -1,5 +1,7 @@
 # Use Rust built `create-vue-monorepo` cli
 
+- A tool to quickly build a Vue workspace project managed by pnpm.
+
 > 使用Rust重构`create-vue-monorepo` cli 库，原库是使用ESM构建的
 
 | 技术栈 | 版本 |

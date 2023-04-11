@@ -3,6 +3,7 @@ name = "create-vue-monorepo-rs"
 version = "0.0.1"
 authors = ["laqudee des <yunlongzhao1996@gmail.com>"]
 keywords = ["create-vue-monorepo", "fe-cli"]
+description = "A tool to quickly build a Vue workspace project managed by pnpm."
 license = "MIT"
 repository = "https://github.com/laqudee/create-vue-monorepo-rs"
 readme = "README.md"
