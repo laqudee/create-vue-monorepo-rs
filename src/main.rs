@@ -1,7 +1,3 @@
-mod utils;
-
-// use console::Term;
-// use dialoguer::{theme::ColorfulTheme, Confirm, Input};
 use git2::Repository;
 use serde_json::json;
 use std::env;
@@ -9,45 +5,11 @@ use std::fs;
 use std::io::Write;
 use std::path::PathBuf;
 
-use create_vue_monorepo_rs::empty_dir;
-use utils::dialoguer_work::work;
-use utils::get_command::get;
-use utils::render::render_template;
-
-#[derive(Debug)]
-pub struct ConfiguresSelected {
-    pub eslint_config: bool,
-    pub vitest_config: bool,
-    pub common_toolbox: bool,
-}
-
-impl ConfiguresSelected {
-    pub fn new() -> Self {
-        Self {
-            eslint_config: false,
-            vitest_config: false,
-            common_toolbox: false,
-        }
-    }
-
-    pub fn set_eslint_config(&mut self, value: bool) {
-        self.eslint_config = value
-    }
-
-    pub fn set_vitest_config(&mut self, value: bool) {
-        self.vitest_config = value
-    }
-
-    pub fn set_common_toolbox(&mut self, value: bool) {
-        self.common_toolbox = value
-    }
-}
-
-impl Default for ConfiguresSelected {
-    fn default() -> Self {
-        Self::new()
-    }
-}
+use create_vue_monorepo_rs::utils::dialoguer_work::work;
+use create_vue_monorepo_rs::utils::get_command::get;
+use create_vue_monorepo_rs::utils::render::render_template;
+use create_vue_monorepo_rs::utils::util::empty_dir;
+use create_vue_monorepo_rs::ConfiguresSelected;
 
 fn main() -> std::io::Result<()> {
     let mut configures_selected = ConfiguresSelected::default();
@@ -56,7 +18,7 @@ fn main() -> std::io::Result<()> {
 
     let root = env::current_dir().unwrap().join(project_name.clone());
 
-    // 初始化git
+    // init git
     let _repo = match Repository::init(&root) {
         Ok(repo) => repo,
         Err(e) => panic!("failed to init: {}", e),
