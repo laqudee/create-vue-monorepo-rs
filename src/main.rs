@@ -1,7 +1,7 @@
 mod utils;
 
-use console::Term;
-use dialoguer::{theme::ColorfulTheme, Confirm, Input};
+// use console::Term;
+// use dialoguer::{theme::ColorfulTheme, Confirm, Input};
 use git2::Repository;
 use serde_json::json;
 use std::env;
@@ -9,7 +9,8 @@ use std::fs;
 use std::io::Write;
 use std::path::PathBuf;
 
-use create_vue_monorepo_rs::{empty_dir, is_valid_package_name, to_valid_package_name};
+use create_vue_monorepo_rs::empty_dir;
+use utils::dialoguer_work::work;
 use utils::get_command::get;
 use utils::render::render_template;
 
@@ -51,7 +52,7 @@ impl Default for ConfiguresSelected {
 fn main() -> std::io::Result<()> {
     let mut configures_selected = ConfiguresSelected::default();
 
-    let (project_name, configures_selected) = dialoguer_work(&mut configures_selected);
+    let (project_name, configures_selected) = work(&mut configures_selected);
 
     let root = env::current_dir().unwrap().join(project_name.clone());
 
@@ -120,44 +121,4 @@ pub fn render(template_name: &str, template_root: &PathBuf, root: &PathBuf) -> s
     render_template(&template_dir, root)?;
 
     Ok(())
-}
-
-pub fn dialoguer_work(configures: &mut ConfiguresSelected) -> (String, &ConfiguresSelected) {
-    let term = Term::buffered_stderr();
-    let theme = ColorfulTheme::default();
-
-    let mut project_name: String = Input::with_theme(&theme)
-        .with_prompt("projectName")
-        .default("vue-monorepo-project".to_string())
-        .interact_on(&term)
-        .unwrap();
-
-    if !is_valid_package_name(&project_name) {
-        println!(
-            "! Invalid package.json name `{}`, Automatically converted to a valid name.",
-            project_name
-        );
-        project_name = to_valid_package_name(&project_name)
-    }
-    println!("! Current project name: {}", project_name);
-
-    let config_value: bool = Confirm::with_theme(&theme)
-        .with_prompt("Add ESLint for code quality & Add Prettier for code formatting?")
-        .interact_on(&term)
-        .unwrap();
-    configures.set_eslint_config(config_value);
-
-    let config_value: bool = Confirm::with_theme(&theme)
-        .with_prompt("Add Vitest for Unit Testing?")
-        .interact_on(&term)
-        .unwrap();
-    configures.set_vitest_config(config_value);
-
-    let config_value: bool = Confirm::with_theme(&theme)
-        .with_prompt("Add Common toolbox lib for project?")
-        .interact_on(&term)
-        .unwrap();
-    configures.set_common_toolbox(config_value);
-
-    (project_name, configures)
 }
