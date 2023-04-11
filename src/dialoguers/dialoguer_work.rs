@@ -1,6 +1,6 @@
 use console::Term;
-use crate::utils::util::{is_valid_package_name, to_valid_package_name};
 use dialoguer::{theme::ColorfulTheme, Confirm, Input};
+use crate::utils::util::{is_valid_package_name, to_valid_package_name};
 
 use crate::ConfiguresSelected;
 

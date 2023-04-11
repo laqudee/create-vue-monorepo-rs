@@ -1,4 +1,6 @@
 pub mod utils;
+pub mod dialoguers;
+pub mod render;
 
 #[derive(Debug)]
 pub struct ConfiguresSelected {

@@ -5,9 +5,9 @@ use std::fs;
 use std::io::Write;
 use std::path::PathBuf;
 
-use create_vue_monorepo_rs::utils::dialoguer_work::work;
+use create_vue_monorepo_rs::dialoguers::dialoguer_work::work;
+use create_vue_monorepo_rs::render::main_render::render;
 use create_vue_monorepo_rs::utils::get_command::get;
-use create_vue_monorepo_rs::utils::render::render_template;
 use create_vue_monorepo_rs::utils::util::empty_dir;
 use create_vue_monorepo_rs::ConfiguresSelected;
 
@@ -74,13 +74,6 @@ fn main() -> std::io::Result<()> {
         println!("! {}", get(package_manager, "test", None));
     }
     println!("! {}", get(package_manager, "dev", None));
-
-    Ok(())
-}
-
-pub fn render(template_name: &str, template_root: &PathBuf, root: &PathBuf) -> std::io::Result<()> {
-    let template_dir = template_root.join(template_name);
-    render_template(&template_dir, root)?;
 
     Ok(())
 }
