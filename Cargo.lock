@@ -47,7 +47,7 @@ dependencies = [
 
 [[package]]
 name = "create-vue-monorepo-rs"
-version = "0.0.2"
+version = "0.0.3"
 dependencies = [
  "console",
  "dialoguer",
