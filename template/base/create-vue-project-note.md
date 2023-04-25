@@ -2,22 +2,23 @@
 
 ## 优先推荐
 
-> 优先推荐作者构建的 `vue-establish` cli工具包
+> 优先推荐作者构建的 `create-vue-business` cli工具包
 
 ### 安装与使用
 
-- [CLI工具包github地址](https://github.com/laqudee/vue-establish)
+- [CLI工具包github地址](https://github.com/laqudee/create-vue-business)
 
 - 安装
 
 ```shell
-pnpm add vue-establish --global
+pnpm add create-vue-business --global
 ```
 
 - 使用
 
 ```shell
-vue-establish create <vue-project-name>
+create-vue-business
+# 然后回车即可
 ```
 
 ## 其他方式说明
@@ -75,7 +76,3 @@ return defineConfig({
 2. 即创建一个保留`vite.config.js`等配置文件的完整项目
 3. 这个项目内部是完整的且可以独立启动的
 4. 但这个项目不能使用外部的统一脚本执行命令（会出现一些报错）
-
-## 最后的说明
-
-> 这个创建业务项目的说明可能有些麻烦，【开发者正在努力磨平这些麻烦】。但是按照这个指南创建的业务项目将与其他业务项目的内部与外部表现一致。
