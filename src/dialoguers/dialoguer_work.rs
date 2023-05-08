@@ -36,10 +36,10 @@ pub fn work(configures: &mut ConfiguresSelected) -> (String, &ConfiguresSelected
     configures.set_vitest_config(config_value);
 
     let config_value: bool = Confirm::with_theme(&theme)
-        .with_prompt("Add Common toolbox lib for project?")
+        .with_prompt("Add Common Utils Library for project?")
         .interact_on(&term)
         .unwrap();
-    configures.set_common_toolbox(config_value);
+    configures.set_common_library(config_value);
 
     (project_name, configures)
 }

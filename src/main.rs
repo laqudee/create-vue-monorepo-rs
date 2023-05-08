@@ -53,7 +53,7 @@ fn main() -> std::io::Result<()> {
         render("config/vitest", &template_root, &root)?;
     }
 
-    if configures_selected.common_toolbox {
+    if configures_selected.common_library {
         render("code", &template_root, &root)?;
     }
 

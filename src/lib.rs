@@ -6,7 +6,7 @@ pub mod render;
 pub struct ConfiguresSelected {
     pub eslint_config: bool,
     pub vitest_config: bool,
-    pub common_toolbox: bool,
+    pub common_library: bool,
 }
 
 impl ConfiguresSelected {
@@ -14,7 +14,7 @@ impl ConfiguresSelected {
         Self {
             eslint_config: false,
             vitest_config: false,
-            common_toolbox: false,
+            common_library: false,
         }
     }
 
@@ -26,8 +26,8 @@ impl ConfiguresSelected {
         self.vitest_config = value
     }
 
-    pub fn set_common_toolbox(&mut self, value: bool) {
-        self.common_toolbox = value
+    pub fn set_common_library(&mut self, value: bool) {
+        self.common_library = value
     }
 }
 
