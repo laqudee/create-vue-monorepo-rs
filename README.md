@@ -73,12 +73,22 @@ cargo publish
 1. [x] ~~使用 Rust 操作文件及目录~~
 2. [x] ~~文件渲染~~
 3. [ ] 命令打包的方式及提供几种构建方式
-   - 目前支持`cargo install creata-vue-monorepo-rs`方式安装使用
+   - 目前支持`cargo install create-vue-monorepo-rs`方式安装使用
 4. [ ] `git2`库没有生效
 5. [ ] 生成的`package.json`内容按照字母顺序排序了，不符合正常的`package.json`顺序
 6. [ ] 是否转为 npm 命令
 
-## 参考
+### 使用Rust写的CLI工具库
+
+- [`create-vue-monorepo-rs`](https://github.com/laqudee/create-vue-monorepo-rs)
+
+- [`create-vue-business`](https://github.com/laqudee/create-vue-business-rs)
+
+### 已经发布的Crate包
+
+- [`create-vue-monorepo-rs`](https://crates.io/crates/create-vue-monorepo-rs)
+
+- [`create-vue-business-rs`](https://crates.io/crates/create-vue-business-rs)
 
 ### 原版使用JavaScript写的CLI工具库
 
