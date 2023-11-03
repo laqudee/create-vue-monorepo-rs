@@ -18,17 +18,17 @@ fn main() -> std::io::Result<()> {
 
     let root = env::current_dir().unwrap().join(project_name.clone());
 
-    // Init git
-    let _repo = match Repository::init(&root) {
-        Ok(repo) => repo,
-        Err(e) => panic!("failed to init: {}", e),
-    };
-
     if fs::metadata(root.clone()).is_ok() {
         empty_dir(root.as_path().to_str().unwrap());
     } else if fs::metadata(root.clone()).is_err() {
         fs::create_dir(root.clone()).unwrap();
     }
+
+    // Init git
+    let _repo = match Repository::init(&root) {
+        Ok(repo) => repo,
+        Err(e) => panic!("failed to init: {}", e),
+    };
 
     println!("! target dir: {:?}", root.display());
     if project_name.len() != 0 {
