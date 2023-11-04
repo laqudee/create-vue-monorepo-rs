@@ -1,6 +1,6 @@
 [package]
 name = "create-vue-monorepo-rs"
-version = "0.0.7"
+version = "0.0.8"
 authors = ["laqudee des <yunlongzhao1996@gmail.com>"]
 keywords = ["create-vue-monorepo", "fe-cli"]
 description = "A tool to quickly build a Vue workspace project managed by pnpm."
@@ -12,7 +12,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-dialoguer = "0.10.3"
+dialoguer = "0.11.0"
 tempfile = "3.5.0"
 thiserror = "1.0.40"
 console = "0.15.5"
@@ -21,4 +21,4 @@ regex = "1.7.3"
 serde = { version = "1.0.159", features = ["derive"]}
 serde_json = "1.0.95"
 serde_derive = "1.0.159"
-git2 = "0.17.0"
+git2 = "0.18.1"
