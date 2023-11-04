@@ -4,15 +4,19 @@
 
 > Refactor the `create-vue-monorepo` CLI library using Rust. The original library was built using ESM.
 
-| 技术栈     | 版本    |
-| :--------- | :------ |
-| rust       | 1.67.1  |
-| dialoguer  | 0.10.3  |
-| console    | 0.15.5  |
-| termcolor  | 1.2.0   |
-| regex      | 1.7.3   |
-| serde_json | 1.0.159 |
-| git2       | 0.17.0  |
+| 技术栈       | 版本    |
+| :----------- | :------ |
+| rust         | 1.71.0  |
+| dialoguer    | 0.11.0  |
+| tempfile     | 3.5.0   |
+| thiserror    | 1.0.40  |
+| console      | 0.15.5  |
+| termcolor    | 1.2.0   |
+| regex        | 1.7.3   |
+| serde        | 1.0.159 |
+| serde_json   | 1.0.95  |
+| serde_derive | 1.0.159 |
+| git2         | 0.18.1  |
 
 ## 使用
 
