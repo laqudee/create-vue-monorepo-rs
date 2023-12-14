@@ -79,7 +79,7 @@ cargo publish
 3. [ ] 命令打包的方式及提供几种构建方式
    - 目前支持`cargo install create-vue-monorepo-rs`方式安装使用
 4. [x] ~~`git2`库没有生效~~
-5. [ ] 生成的`package.json`内容按照字母顺序排序了，不符合正常的`package.json`顺序
+5. [x] ~~生成的`package.json`内容按照字母顺序排序了，不符合正常的`package.json`顺序~~
 6. [ ] 是否转为 npm 命令
 
 ### 使用Rust写的CLI工具库
